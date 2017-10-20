@@ -31,7 +31,7 @@ subnet_ip_ranges = template.add_parameter(Parameter(
 ))
 
 vpc = template.add_resource(VPC(
-    Join('-', [Ref(environment), 'vpc']),
+    "VPC",
     CidrBlock=Ref(vpc_ip_range),
     EnableDnsSupport=True,
     EnableDnsHostnames=True,
