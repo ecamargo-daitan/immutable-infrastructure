@@ -8,4 +8,4 @@ virtualenv --system-site-packages venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-python deploy.py ${BUILD_ID} ami-eb19f791 ${ENVIRONMENT_NAME}
+python deploy.py ${BUILD_ID} ami-db48ada1 ${ENVIRONMENT_NAME}

@@ -6,7 +6,7 @@
 - name: create cloud formation template
   shell: "python {{role_path}}/files/sg_template.py > {{temp_file.path}}"
 
-- name: "deploy slingshot security groups stack"
+- name: "deploy api security groups stack"
   cloudformation:
     region: "{{aws_region}}"
     stack_name: "{{environment_name}}-sg"
