@@ -1,0 +1,35 @@
+- name: Make sure java 8 is installed
+  yum:
+    name: java-1.8.0-openjdk
+    state: latest
+
+- name: Create API directory
+  file:
+    path: /usr/share/api/
+    state: directory
+    owner: centos
+    group: centos
+
+- name: Move API jar to correct path
+  copy:
+    src: api-0.0.1-SNAPSHOT.jar
+    dest: /usr/share/api/api.jar
+    owner: centos
+    group: centos
+    mode: 0755
+
+- name: Configure API service
+  copy:
+    src: api.service
+    dest: /etc/systemd/system/api.service
+
+- name: Enable API service
+  systemd:
+    name: api.service
+    daemon_reload: yes
+    enabled: yes
+
+- name: Restart API service
+  systemd:
+    name: api.service
+    state: restarted

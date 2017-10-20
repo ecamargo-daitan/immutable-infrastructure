@@ -1,0 +1,7 @@
+- name: Install API
+  hosts: "tag_Environment_{{ environment_name }}"
+  gather_facts: true
+  remote_user: centos
+  sudo: yes
+  roles:
+    - api

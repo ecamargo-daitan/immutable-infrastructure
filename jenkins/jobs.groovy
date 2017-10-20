@@ -40,6 +40,7 @@ job(apiBuildName) {
 job('deploy') {
     parameters {
         stringParam(apiBuildNumberParam, null, 'Api build number to get the artifacts from')
+        stringParam(envNameParam, null, 'Environment name')
     }
     scm {
         git {
@@ -58,7 +59,7 @@ job('deploy') {
                 buildNumber("\$${apiBuildNumberParam}")
             }
             flatten()
-            targetDirectory('$WORKSPACE/deploy/')
+            targetDirectory('$WORKSPACE/ansible/playbooks/roles/api/files')
             optional(false)
         }
         shell("jenkins/deploy.sh")
@@ -102,5 +103,8 @@ pipelineJob('pipeline') {
             }
             scriptPath("jenkins/pipeline.groovy")
         }
+    }
+    parameters {
+        stringParam(envParam, 'test', 'The target environment to configure')
     }
 }

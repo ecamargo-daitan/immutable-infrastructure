@@ -20,7 +20,7 @@ def deploy(version, ami_id, env_name):
     command = 'ansible-playbook '
     command += '-e "api_ami_id={}" '.format(ami_id)
     command += '-e "version={}" '.format(version)
-    command += '-e "env_name={}" '.format(env_name)
+    command += '-e "environment_name={}" '.format(env_name)
     command += 'playbooks/deploy.yml'
 
     subprocess.call(command, shell=True)

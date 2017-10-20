@@ -2,12 +2,10 @@
 
 set -ex
 
-cd ${WORKSPACE}/deploy
-
-ami_id="$(cat ami-id.txt)"
+cd ${WORKSPACE}/ansible
 
 virtualenv --system-site-packages venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-python deploy.py ${BUILD_ID} ${ami_id}
+ansible-playbook -i ec2.py -e environment_name=${ENVIRONMENT_NAME} playbooks/api.yml
