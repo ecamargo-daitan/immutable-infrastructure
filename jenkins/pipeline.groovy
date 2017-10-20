@@ -1,15 +1,6 @@
 apiBuildNumberParam = 'API_BUILD_NUMBER'
 envNameParam = 'ENVIRONMENT_NAME'
 
-def user = 'No user'
-node {
-    wrap([$class: 'BuildUser']) {
-        user = env.BUILD_USER_ID
-    }
-}
-
-currentBuild.displayName = "#$BUILD_NUMBER ($ENVIRONMENT_NAME - $user)"
-
 apiBuild = null
 bakeBuild = null
 pipeline {
