@@ -1,4 +1,4 @@
-def gitUrl = 'https://github.com/isacssouza/immutable-infrastructure.git'
+def gitUrl = 'https://github.com/ecamargo/immutable-infrastructure.git'
 
 apiBuildNumberParam = 'API_BUILD_NUMBER'
 bakeBuildNumberParam = 'BAKE_BUILD_NUMBER'
