@@ -16,7 +16,7 @@ vpc_id = template.add_parameter(Parameter(
 ))
 
 api_elb_sg = template.add_resource(SecurityGroup(
-    GroupName=Join('-', [Ref(environment), 'elb-sg']),
+    'ApiElbSg',
     VpcId=Ref(vpc_id),
     GroupDescription='Security group for the api ELB',
     SecurityGroupIngress=[SecurityGroupRule(
@@ -28,7 +28,7 @@ api_elb_sg = template.add_resource(SecurityGroup(
 ))
 
 api_sg = template.add_resource(SecurityGroup(
-    GroupName=Join('-', [Ref(environment), 'api-sg']),
+    'ApiSg',
     VpcId=Ref(vpc_id),
     GroupDescription='Security Group for the api',
     SecurityGroupIngress=[
