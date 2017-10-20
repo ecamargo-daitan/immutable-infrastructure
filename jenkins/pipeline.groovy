@@ -34,7 +34,7 @@ pipeline {
                     build(
                             job: "deploy",
                             parameters: [
-                                    string(name: apiBuildNumberParam, value: String.valueOf(apiBuild.getNumber()))
+                                    string(name: apiBuildNumberParam, value: String.valueOf(apiBuild.getNumber())),
                                     string(name: envNameParam, value: 'ENVIRONMENT_NAME')
                             ]
                     )
