@@ -11,7 +11,7 @@ job(apiBuildName) {
             remote {
                 url(gitUrl)
             }
-            branch('master')
+            branch('bt-webinar')
             extensions {
                 cleanBeforeCheckout()
             }
@@ -47,14 +47,14 @@ job('deploy') {
             remote {
                 url(gitUrl)
             }
-            branch('master')
+            branch('bt-webinar')
             extensions {
                 cleanBeforeCheckout()
             }
         }
     }
     steps {
-        copyArtifacts(bakeBuildName) {
+        copyArtifacts(apiBuildName) {
             buildSelector {
                 buildNumber("\$${apiBuildNumberParam}")
             }
@@ -75,7 +75,7 @@ job('createEnvironment') {
             remote {
                 url(gitUrl)
             }
-            branch('master')
+            branch('bt-webinar')
             extensions {
                 cleanBeforeCheckout()
             }
@@ -95,7 +95,7 @@ pipelineJob('pipeline') {
                     remote {
                         url(gitUrl)
                     }
-                    branch('master')
+                    branch('bt-webinar')
                     extensions {
                         cleanBeforeCheckout()
                     }
