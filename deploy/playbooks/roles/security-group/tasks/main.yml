@@ -9,7 +9,7 @@
 - name: "deploy slingshot security groups stack"
   cloudformation:
     region: "{{aws_region}}"
-    stack_name: "security-group"
+    stack_name: "{{environment_name}}-sg"
     state: present
     template: "{{temp_file.path}}"
     template_parameters:

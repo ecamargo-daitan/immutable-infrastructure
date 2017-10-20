@@ -9,7 +9,7 @@
 - name: deploy sns topic
   cloudformation:
     region: "{{aws_region}}"
-    stack_name: "sns-topic"
+    stack_name: "{{environment_name}}-sns-topic"
     state: present
     template: "{{temp_file.path}}"
     template_parameters:

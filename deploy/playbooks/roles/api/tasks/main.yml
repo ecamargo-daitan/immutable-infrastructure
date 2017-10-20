@@ -9,7 +9,7 @@
 - name: deploy api stack
   cloudformation:
     region: "{{aws_region}}"
-    stack_name: "api-{{version}}"
+    stack_name: "{{environment_name}}-api-{{version}}"
     state: present
     template: "{{temp_file.path}}"
     template_parameters:

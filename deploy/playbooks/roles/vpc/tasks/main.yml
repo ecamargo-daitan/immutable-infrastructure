@@ -10,7 +10,7 @@
 - name: "deploy vpc"
   cloudformation:
     region: "{{aws_region}}"
-    stack_name: "vpc"
+    stack_name: "{{environment_name}}-vpc"
     state: present
     template: "{{temp_file.path}}"
     template_parameters:

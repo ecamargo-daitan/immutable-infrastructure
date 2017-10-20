@@ -10,24 +10,24 @@ def parse_args():
     parser = ArgumentParser(description='Deploy the application.')
     parser.add_argument('version', type=str, help='The version number for this deployment.')
     parser.add_argument('ami_id', type=str, help='Api AMI id to deploy.')
-    parser.add_argument('environment_name', type=str, help='Environment name.')
+    parser.add_argument('env_name', type=str, help='Environment name.')
     return parser.parse_args()
 
 
-def deploy(version, ami_id):
+def deploy(version, ami_id, env_name):
     print("Deploying version {} using {}.".format(version, ami_id))
 
     command = 'ansible-playbook '
     command += '-e "api_ami_id={}" '.format(ami_id)
     command += '-e "version={}" '.format(version)
-    command += '-e "environment_name={}" '.format(environment_name)
+    command += '-e "env_name={}" '.format(env_name)
     command += 'playbooks/deploy.yml'
 
     subprocess.call(command, shell=True)
 
 
-def is_app(tags):
-    return tags.get('Application') == 'true'
+def is_app(tags, env_name):
+    return tags.get('Application') == 'true' and tags.get('Environment') == env_name
 
 
 def is_version(tags, version):
@@ -38,22 +38,22 @@ def to_tag_dict(tags):
     return {tag['Key']:  tag['Value'] for tag in tags}
 
 
-def delete_old(new_version):
+def delete_old(env_name, new_version):
     client = boto3.client('cloudformation', region_name=os.environ['AWS_REGION'])
 
     all_stacks = client.describe_stacks()
 
     for stack in all_stacks['Stacks']:
         tags = to_tag_dict(stack['Tags'])
-        if is_app(tags) and not is_version(tags, new_version):
+        if is_app(tags, env_name) and not is_version(tags, new_version):
             print('Deleting version {}.'.format(tags['Version']))
             client.delete_stack(StackName=stack['StackName'])
 
 
-def delete_new(version):
+def delete_new(env_name, version):
     client = boto3.client('cloudformation', region_name=os.environ['AWS_REGION'])
 
-    client.delete_stack(StackName='api-{}'.format(version))
+    client.delete_stack(StackName='{}-api-{}'.format(env_name,version))
 
 
 def is_service_up(dns, tries=0, max_tries=10):
@@ -75,9 +75,9 @@ def is_service_up(dns, tries=0, max_tries=10):
     return success
 
 
-def is_version_healthy(version):
+def is_version_healthy(env_name, version):
     client = boto3.client('cloudformation', region_name=os.environ['AWS_REGION'])
-    stacks = client.describe_stacks(StackName='api-{}'.format(version))
+    stacks = client.describe_stacks(StackName='{}-api-{}'.format(env_name,version))
     stack = stacks['Stacks'][0]
 
     for output in stack['Outputs']:
@@ -92,17 +92,18 @@ def main():
     args = parse_args()
     version = args.version
     ami_id = args.ami_id
+    env_name = args.env_name
 
-    deploy(version, ami_id)
+    deploy(version, ami_id, env_name)
 
     print('Version {} deployed.'.format(version))
 
-    if is_version_healthy(version):
+    if is_version_healthy(env_name, version):
         print('New version is healthy, deleting old versions.')
-        delete_old(version)
+        delete_old(env_name, version)
     else:
         print('New version is not healthy, deleting new version.')
-        delete_new(version)
+        delete_new(env_name, version)
 
 
 if __name__ == '__main__':
