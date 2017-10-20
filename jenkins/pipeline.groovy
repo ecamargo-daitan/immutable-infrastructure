@@ -1,5 +1,6 @@
 apiBuildNumberParam = 'API_BUILD_NUMBER'
 envNameParam = 'ENVIRONMENT_NAME'
+env = params.ENVIRONMENT_NAME
 
 apiBuild = null
 bakeBuild = null
@@ -26,7 +27,7 @@ pipeline {
                             job: "deploy",
                             parameters: [
                                     string(name: apiBuildNumberParam, value: String.valueOf(apiBuild.getNumber())),
-                                    string(name: envNameParam, value: 'ENVIRONMENT_NAME')
+                                    string(name: envNameParam, value: env)
                             ]
                     )
                 }
