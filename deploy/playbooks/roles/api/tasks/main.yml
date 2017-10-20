@@ -18,6 +18,8 @@
       SnsTopicArn: "{{sns_topic_arn}}"
       KeyName: "{{key_name}}"
       AmiId: "{{api_ami_id}}"
+      ElbSgId: "{{api_elb_sg}}"
+      ApiSgId: "{{api_sg}}"
       InstanceType: "{{api_instance_type}}"
       Subnets: "{{subnets | join(',')}}"
       DesiredCapacity: "{{api_asg_desired_capacity}}"

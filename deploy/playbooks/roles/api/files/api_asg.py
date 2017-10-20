@@ -20,6 +20,18 @@ vpc_id = template.add_parameter(Parameter(
     Description='The vpc to assign to the elb'
 ))
 
+api_elb_sg = template.add_parameter(Parameter(
+    'ElbSgId',
+    Type='AWS::EC2::SecurityGroup::Id',
+    Description='The ELB security group ID.'
+))
+
+api_sg = template.add_parameter(Parameter(
+    'ApiSgId',
+    Type='AWS::EC2::SecurityGroup::Id',
+    Description='The API security group ID.'
+))
+
 sns_topic_arn = template.add_parameter(Parameter(
     'SnsTopicArn',
     Type='String',
@@ -79,37 +91,6 @@ version = template.add_parameter(Parameter(
     "Version",
     Type="String",
     Description="The version of the api",
-))
-
-api_elb_sg = template.add_resource(SecurityGroup(
-    'ApiElbSg',
-    VpcId=Ref(vpc_id),
-    GroupDescription='Security group for the api ELB',
-    SecurityGroupIngress=[SecurityGroupRule(
-        IpProtocol="tcp",
-        FromPort="80",
-        ToPort="80",
-        CidrIp="0.0.0.0/0",
-    )]
-))
-
-api_sg = template.add_resource(SecurityGroup(
-    'ApiSg',
-    VpcId=Ref(vpc_id),
-    GroupDescription='Security Group for the api',
-    SecurityGroupIngress=[
-        SecurityGroupRule(
-            IpProtocol="tcp",
-            FromPort="8080",
-            ToPort="8080",
-            SourceSecurityGroupId=Ref(api_elb_sg),
-        ),
-        SecurityGroupRule(
-            IpProtocol="tcp",
-            FromPort="22",
-            ToPort="22",
-            CidrIp='0.0.0.0/0',
-        )]
 ))
 
 load_balancer = template.add_resource(LoadBalancer(
