@@ -105,6 +105,6 @@ pipelineJob('pipeline') {
         }
     }
     parameters {
-        stringParam(envParam, 'test', 'The target environment to configure')
+        stringParam(envNameParam, 'test', 'The target environment to configure')
     }
 }
