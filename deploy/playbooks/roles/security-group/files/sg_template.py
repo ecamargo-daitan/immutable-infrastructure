@@ -1,7 +1,13 @@
-from troposphere import Ref, Template, Parameter, Output
+from troposphere import Ref, Template, Parameter, Output, Join
 from troposphere.ec2 import SecurityGroup, SecurityGroupRule
 
 template = Template()
+
+environment = template.add_parameter(Parameter(
+    'Environment',
+    Type='String',
+    Default='test'
+))
 
 vpc_id = template.add_parameter(Parameter(
     'VpcId',
@@ -10,7 +16,7 @@ vpc_id = template.add_parameter(Parameter(
 ))
 
 api_elb_sg = template.add_resource(SecurityGroup(
-    'ApiElbSg',
+    Join('-', [Ref(environment), 'elb-sg']),
     VpcId=Ref(vpc_id),
     GroupDescription='Security group for the api ELB',
     SecurityGroupIngress=[SecurityGroupRule(
@@ -22,7 +28,7 @@ api_elb_sg = template.add_resource(SecurityGroup(
 ))
 
 api_sg = template.add_resource(SecurityGroup(
-    'ApiSg',
+    Join('-', [Ref(environment), 'api-sg']),
     VpcId=Ref(vpc_id),
     GroupDescription='Security Group for the api',
     SecurityGroupIngress=[

@@ -14,6 +14,7 @@
     state: present
     template: "{{temp_file.path}}"
     template_parameters:
+      Environment: "{{environment_name}}"
       VpcIpRange: "{{vpc_ip_range}}"
       SubnetIpRanges: "{{subnet_ip_ranges | join(',')}}"
   register: cfn_result

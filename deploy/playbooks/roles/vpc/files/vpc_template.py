@@ -1,8 +1,6 @@
-from troposphere import Template, Ref, Parameter, Select, Output
+from troposphere import Template, Ref, Parameter, Select, Output, Join
 from troposphere.ec2 import VPC, Subnet, InternetGateway, RouteTable, Route, \
     SubnetRouteTableAssociation, VPCGatewayAttachment
-
-VPC_LOGICAL_NAME = 'Vpc'
 
 ZONE_0 = 'Zone0'
 ZONE_1 = 'Zone1'
@@ -13,6 +11,12 @@ template = Template()
 
 region = Ref('AWS::Region')
 account = Ref('AWS::AccountId')
+
+environment = template.add_parameter(Parameter(
+    'Environment',
+    Type='String',
+    Default='test'
+))
 
 vpc_ip_range = template.add_parameter(Parameter(
     'VpcIpRange',
@@ -27,7 +31,7 @@ subnet_ip_ranges = template.add_parameter(Parameter(
 ))
 
 vpc = template.add_resource(VPC(
-    VPC_LOGICAL_NAME,
+    Join('-', [Ref(environment), 'vpc']),
     CidrBlock=Ref(vpc_ip_range),
     EnableDnsSupport=True,
     EnableDnsHostnames=True,

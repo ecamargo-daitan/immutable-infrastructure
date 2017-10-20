@@ -13,6 +13,7 @@
     state: present
     template: "{{temp_file.path}}"
     template_parameters:
+      Environment: "{{environment_name}}"
       VpcId: "{{vpc_id}}"
   register: cfn_result
 

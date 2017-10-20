@@ -2,6 +2,7 @@ def gitUrl = 'https://github.com/isacssouza/immutable-infrastructure.git'
 
 apiBuildNumberParam = 'API_BUILD_NUMBER'
 bakeBuildNumberParam = 'BAKE_BUILD_NUMBER'
+envNameParam = 'ENVIRONMENT_NAME'
 
 apiBuildName = 'build-api'
 job(apiBuildName) {
@@ -30,8 +31,7 @@ job(apiBuildName) {
     }
 }
 
-bakeBuildName = 'bake'
-job(bakeBuildName) {
+job('deploy') {
     parameters {
         stringParam(apiBuildNumberParam, null, 'Api build number to get the artifacts from')
     }
@@ -46,27 +46,21 @@ job(bakeBuildName) {
         }
     }
     steps {
-        copyArtifacts(apiBuildName) {
+        copyArtifacts(bakeBuildName) {
             buildSelector {
                 buildNumber("\$${apiBuildNumberParam}")
             }
             flatten()
-            targetDirectory('$WORKSPACE/packer/')
+            targetDirectory('$WORKSPACE/deploy/')
             optional(false)
         }
-        shell("jenkins/bake.sh")
-    }
-    publishers {
-        archiveArtifacts {
-            pattern('packer/ami-id.txt')
-            onlyIfSuccessful()
-        }
+        shell("jenkins/deploy.sh")
     }
 }
 
-job('deploy') {
+job('createEnvironment') {
     parameters {
-        stringParam(bakeBuildNumberParam, null, 'Bake build number to get the artifacts from')
+        stringParam(envNameParam, null, 'Environment name')
     }
     scm {
         git {
@@ -79,17 +73,10 @@ job('deploy') {
         }
     }
     steps {
-        copyArtifacts(bakeBuildName) {
-            buildSelector {
-                buildNumber("\$${bakeBuildNumberParam}")
-            }
-            flatten()
-            targetDirectory('$WORKSPACE/deploy/')
-            optional(false)
-        }
-        shell("jenkins/deploy.sh")
+        shell("jenkins/createEnvironment.sh")
     }
 }
+
 
 pipelineJob('pipeline') {
     definition {

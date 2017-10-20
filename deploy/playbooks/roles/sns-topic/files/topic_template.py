@@ -1,8 +1,14 @@
-from troposphere import Output, Ref, Template, Parameter
+from troposphere import Output, Ref, Template, Parameter, Join
 from troposphere.sns import Topic, SubscriptionResource
 
 
 template = Template()
+
+environment = template.add_parameter(Parameter(
+    'Environment',
+    Type='String',
+    Default='test'
+))
 
 email = template.add_parameter(Parameter(
     'Email',
@@ -12,7 +18,7 @@ email = template.add_parameter(Parameter(
 topic = template.add_resource(Topic(
     'SnsTopic',
     DisplayName='sns-topic',
-    TopicName='sns-topic'
+    TopicName=Join('-', [Ref(environment), 'sns-topic']),
 ))
 
 template.add_resource(SubscriptionResource(

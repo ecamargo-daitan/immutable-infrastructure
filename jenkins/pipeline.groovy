@@ -19,25 +19,13 @@ pipeline {
                 }
             }
         }
-        stage('bake') {
-            steps {
-                script {
-                    bakeBuild = build(
-                            job: "bake",
-                            parameters: [
-                                    string(name: apiBuildNumberParam, value: String.valueOf(apiBuild.getNumber()))
-                            ]
-                    )
-                }
-            }
-        }
         stage('deploy') {
             steps {
                 script {
                     build(
                             job: "deploy",
                             parameters: [
-                                    string(name: bakeBuildNumberParam, value: String.valueOf(bakeBuild.getNumber()))
+                                    string(name: apiBuildNumberParam, value: String.valueOf(apiBuild.getNumber()))
                             ]
                     )
                 }

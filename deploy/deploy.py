@@ -10,6 +10,7 @@ def parse_args():
     parser = ArgumentParser(description='Deploy the application.')
     parser.add_argument('version', type=str, help='The version number for this deployment.')
     parser.add_argument('ami_id', type=str, help='Api AMI id to deploy.')
+    parser.add_argument('environment_name', type=str, help='Environment name.')
     return parser.parse_args()
 
 
@@ -19,6 +20,7 @@ def deploy(version, ami_id):
     command = 'ansible-playbook '
     command += '-e "api_ami_id={}" '.format(ami_id)
     command += '-e "version={}" '.format(version)
+    command += '-e "environment_name={}" '.format(environment_name)
     command += 'playbooks/deploy.yml'
 
     subprocess.call(command, shell=True)

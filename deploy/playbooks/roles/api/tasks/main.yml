@@ -13,6 +13,7 @@
     state: present
     template: "{{temp_file.path}}"
     template_parameters:
+      Environment: "{{environment_name}}"
       VpcId: "{{vpc_id}}"
       SnsTopicArn: "{{sns_topic_arn}}"
       KeyName: "{{key_name}}"
@@ -24,6 +25,7 @@
       MinSize: "{{api_asg_min_size}}"
       Version: "{{version}}"
     tags:
+      Environment: "{{environment_name}}"
       Application: "true"
       Version: "{{version}}"
 

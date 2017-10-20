@@ -8,6 +8,12 @@ from troposphere.autoscaling import LaunchConfiguration, AutoScalingGroup
 
 template = Template()
 
+environment = template.add_parameter(Parameter(
+    'Environment',
+    Type='String',
+    Default='test'
+))
+
 vpc_id = template.add_parameter(Parameter(
     'VpcId',
     Type='String',
@@ -108,7 +114,7 @@ api_sg = template.add_resource(SecurityGroup(
 
 load_balancer = template.add_resource(LoadBalancer(
     'ApplicationElasticLB',
-    Name=Join('-', ['api', 'elb', Ref(version)]),
+    Name=Join('-', [Ref(environment), 'elb', Ref(version)]),
     LoadBalancerAttributes=[
         LoadBalancerAttributes(Key='access_logs.s3.enabled', Value='false'),
         LoadBalancerAttributes(Key='idle_timeout.timeout_seconds', Value='60'),
@@ -120,7 +126,7 @@ load_balancer = template.add_resource(LoadBalancer(
 
 target_group = template.add_resource(TargetGroup(
     'DefaultTargetGroup',
-    Name=Join('-', ['api', 'default', Ref(version)]),
+    Name=Join('-', [Ref(environment), 'api', Ref(version)]),
     HealthCheckIntervalSeconds=5,
     HealthCheckProtocol='HTTP',
     HealthCheckTimeoutSeconds=2,
