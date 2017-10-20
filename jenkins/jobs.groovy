@@ -11,6 +11,7 @@ job(apiBuildName) {
             remote {
                 url(gitUrl)
             }
+            branch('master')
             extensions {
                 cleanBeforeCheckout()
             }
@@ -28,6 +29,11 @@ job(apiBuildName) {
                 publishTestStabilityData()
             }
         }
+        jacocoCodeCoverage {}
+        checkstyle {
+            canRunOnFailed(true)
+        }
+
     }
 }
 
@@ -40,6 +46,7 @@ job('deploy') {
             remote {
                 url(gitUrl)
             }
+            branch('master')
             extensions {
                 cleanBeforeCheckout()
             }
@@ -67,6 +74,7 @@ job('createEnvironment') {
             remote {
                 url(gitUrl)
             }
+            branch('master')
             extensions {
                 cleanBeforeCheckout()
             }
@@ -86,6 +94,7 @@ pipelineJob('pipeline') {
                     remote {
                         url(gitUrl)
                     }
+                    branch('master')
                     extensions {
                         cleanBeforeCheckout()
                     }
